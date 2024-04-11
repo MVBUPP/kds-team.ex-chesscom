@@ -37,64 +37,44 @@ class Component(ComponentBase):
         """
         Main execution code
         """
+        # Get user configuration
+        # Fetch data from Chess.com API
+        # https://api.chess.com/pub/player/magsstrats/stats
 
-        # ####### EXAMPLE TO REMOVE
-        # check for missing configuration parameters
-        self.validate_configuration_parameters(REQUIRED_PARAMETERS)
-        self.validate_image_parameters(REQUIRED_IMAGE_PARS)
-        params = self.configuration.parameters
-        # Access parameters in data/config.json
-        if params.get(KEY_PRINT_HELLO):
-            logging.info("Hello World")
+        
+        from chessdotcom import get_player_stats, Client
+        Client.request_config["headers"]["User-Agent"] = (
+            "My Python Application. "
+            "Contact me at mvbupp@gmail.com"
+        )
+        response = get_player_stats('magsstrats')
+        print(response.json)
+        player_name = "magsstrats"
 
-        # get input table definitions
-        input_tables = self.get_input_tables_definitions()
-        for table in input_tables:
-            logging.info(f'Received input table: {table.name} with path: {table.full_path}')
+        data = response.json
+        categories=['chess_blitz', 'chess_bullet', 'chess_rapid']
+        
 
-        if len(input_tables) == 0:
-            raise UserException("No input tables found")
+        #output_table_path = self.create_out_table_definition('chess_stats.csv').full_path
+        output_table_path='chess_stats.csv'
+        # Write data to output table
+        with open(output_table_path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            # Define column headers based on the data structure
+            writer.writerow(
+                ['username', 'category', 'rating'])
 
-        # get last state data/in/state.json from previous run
-        previous_state = self.get_state_file()
-        logging.info(previous_state.get('some_state_parameter'))
+            # Parse and write data rows
+            for category in categories:
+                writer.writerow([
+                    player_name,
+                    category,
+                    data['stats'][category]['last']['rating'],
+                ])
 
-        # Create output table (Tabledefinition - just metadata)
-        table = self.create_out_table_definition('output.csv', incremental=True, primary_key=['timestamp'])
+        # Log completion message
+        #self.logger.info(f'Data for user {player_name} fetched successfully.')
 
-        # get file path of the table (data/out/tables/Features.csv)
-        out_table_path = table.full_path
-        logging.info(out_table_path)
-
-        # Add timestamp column and save into out_table_path
-        input_table = input_tables[0]
-        with (open(input_table.full_path, 'r') as inp_file,
-              open(table.full_path, mode='wt', encoding='utf-8', newline='') as out_file):
-            reader = csv.DictReader(inp_file)
-
-            columns = list(reader.fieldnames)
-            # append timestamp
-            columns.append('timestamp')
-
-            # write result with column added
-            writer = csv.DictWriter(out_file, fieldnames=columns)
-            writer.writeheader()
-            for in_row in reader:
-                in_row['timestamp'] = datetime.now().isoformat()
-                writer.writerow(in_row)
-
-        # Save table manifest (output.csv.manifest) from the tabledefinition
-        self.write_manifest(table)
-
-        # Write new state - will be available next run
-        self.write_state_file({"some_state_parameter": "value"})
-
-        # ####### EXAMPLE TO REMOVE END
-
-
-"""
-        Main entrypoint
-"""
 if __name__ == "__main__":
     try:
         comp = Component()
