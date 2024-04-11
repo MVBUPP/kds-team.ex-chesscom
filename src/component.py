@@ -48,7 +48,7 @@ class Component(ComponentBase):
             "Contact me at mvbupp@gmail.com"
         )
         response = get_player_stats('magsstrats')
-        print(response.json)
+        
         player_name = "magsstrats"
 
         data = response.json
