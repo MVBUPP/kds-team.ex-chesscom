@@ -51,12 +51,20 @@ class Component(ComponentBase):
         # https://api.chess.com/pub/player/magsstrats/stats
         params = self.configuration.parameters
         PLAYER_NAME = params['player_name']
+        LEADERBOARDS= params['leaderboard_type']
         def get_chess_leaderboards():
             response=get_leaderboards()
             
 
             data = response.json
+            
+            
+            
             categories=data.keys()
+            subcategories=LEADERBOARDS
+            if("all" in LEADERBOARDS):
+                subcategories=data.keys()
+
             #output_table_path='./out/tables/chess_leaderboards.csv'
             table = self.create_out_table_definition('chess_leaderboards.csv', incremental= True)
             #output_path=table.full_path
@@ -68,7 +76,7 @@ class Component(ComponentBase):
 
                 # Parse and write data rows
                 for category in categories:
-                        for entry1 in data[category]:
+                        for entry1 in subcategories:
                             
                             writer.writerow(['Category','Rank', 'Username', 'Score'])
                             for entry in data[category][entry1]:

@@ -12,6 +12,32 @@
       "description": "Chess.com Username"
 
     },
+    "leaderboard_type":{
+      "type": "array",
+      "title": "Leaderboard Type(s):",
+      "items":{
+        "enum":[
+          "daily",
+          "live_rapid",
+          "live_blitz",
+          "live_bullet",
+          "live_bughouse",
+          "live_blitz960",
+          "live_threecheck",
+          "live_crazyhouse",
+          "live_kingofthehill",
+          "tactics",
+          "rush",
+          "battle"
+        ],
+        "type": "literal"
+      },
+      "default": "all",
+      "format": "select",
+      "uniqueItems": true,
+      "propertyOrder": 360
+
+    },
     "debug": {
       "type": "boolean",
       "title": "Debug"
