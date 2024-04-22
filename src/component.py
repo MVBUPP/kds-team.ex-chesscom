@@ -57,7 +57,7 @@ class Component(ComponentBase):
 
             data = response.json
             categories=data.keys()
-            output_table_path='./out/files/chess_leaderboards.csv'
+            output_table_path='./out/tables/chess_leaderboards.csv'
             #output_table_path = self.create_out_table_definition('chess_leaderboards.csv').full_path
             #write data
             #write data
@@ -81,7 +81,7 @@ class Component(ComponentBase):
         def get_chess_stats_player(player_name):
             response = get_player_stats("magsstrats")
             categories=['chess_blitz', 'chess_bullet', 'chess_rapid']
-            output_table_path='./out/files/chess_stats.csv'
+            output_table_path='./out/tables/chess_stats.csv'
             #output_table_path = self.create_out_table_definition('chess_stats.csv').full_path
             data = response.json
             #write data
