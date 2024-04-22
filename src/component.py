@@ -14,7 +14,7 @@ from keboola.component import CommonInterface
 #os.chdir("./data")
 # Rely on the KBC_DATADIR environment variable by default,
 # alternatively provide a data folder path in the constructor (CommonInterface('data'))
-ci = CommonInterface()
+ci = CommonInterface('data')
 params = ci.configuration.parameters
 
 
