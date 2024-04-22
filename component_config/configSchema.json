@@ -14,7 +14,7 @@
     },
     "debug": {
       "type": "boolean",
-      "title": "Debug",
+      "title": "Debug"
       
     }
   }
