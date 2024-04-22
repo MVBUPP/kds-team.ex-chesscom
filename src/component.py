@@ -57,12 +57,12 @@ class Component(ComponentBase):
 
             data = response.json
             categories=data.keys()
-            #output_table_path='./out/tables/chess_leaderboards.csv'
-            table = self.create_out_table_definition('chess_leaderboards.csv', incremental= True)
-            output_path=table.full_path
+            output_table_path='./out/tables/chess_leaderboards.csv'
+            #table = self.create_out_table_definition('chess_leaderboards.csv', incremental= True)
+            #output_path=table.full_path
             #write data
             #write data
-            with open(table.full_path, mode='w', newline='') as file:
+            with open(output_table_path, mode='w', newline='') as file:
                 writer = csv.writer(file)
                 # Define column headers based on the data structure
 
@@ -80,10 +80,10 @@ class Component(ComponentBase):
 
         #output_table_path = self.create_out_table_definition('chess_stats.csv').full_path
         def get_chess_stats_player(player_name):
-            response = get_player_stats("magsstrats")
+            response = get_player_stats(player_name)
             categories=['chess_blitz', 'chess_bullet', 'chess_rapid']
-            #output_table_path='./out/files/chess_stats.csv'
-            output_table_path = self.create_out_table_definition('chess_stats.csv', incremental=True).full_path
+            output_table_path='./out/tables/chess_stats.csv'
+            #output_table_path = self.create_out_table_definition('chess_stats.csv', incremental=True).full_path
             data = response.json
             #write data
             with open(output_table_path, mode='w', newline='') as file:
