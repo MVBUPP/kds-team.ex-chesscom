@@ -2,13 +2,15 @@
   "type": "object",
   "title": "extractor configuration",
   "required": [
-    "print_hello"
+    
   ],
   "properties": {
-    "print_hello": {
-      "type": "boolean",
-      "title": "Print Hello",
-      "propertyOrder": 1
+    "player_name": {
+      "type": "string",
+      "title": "Player Name",
+      "default": "Username",
+      "description": "Chess.com Username"
+
     },
     "debug": {
       "type": "boolean",

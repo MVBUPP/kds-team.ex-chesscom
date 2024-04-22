@@ -8,14 +8,22 @@ from datetime import datetime
 
 from keboola.component.base import ComponentBase
 from keboola.component.exceptions import UserException
+# Load the Component library to process the config file
+from keboola.component import CommonInterface
+
+# Rely on the KBC_DATADIR environment variable by default,
+# alternatively provide a data folder path in the constructor (CommonInterface('data'))
+ci = CommonInterface('.')
+params = ci.configuration.parameters
+
 
 # configuration variables
 KEY_API_TOKEN = '#api_token'
-KEY_PRINT_HELLO = 'print_hello'
+PLAYER_NAME = params['player_name']
 
 # list of mandatory parameters => if some is missing,
 # component will fail with readable message on initialization.
-REQUIRED_PARAMETERS = [KEY_PRINT_HELLO]
+REQUIRED_PARAMETERS = []
 REQUIRED_IMAGE_PARS = []
 
 
@@ -41,36 +49,64 @@ class Component(ComponentBase):
         # Fetch data from Chess.com API
         # https://api.chess.com/pub/player/magsstrats/stats
 
-        
-        from chessdotcom import get_player_stats, Client
+        def get_chess_leaderboards():
+            response=get_leaderboards()
+            
+
+            data = response.json
+            categories=data.keys()
+            output_table_path='./out/files/chess_leaderboards.csv'
+    
+            #write data
+            #write data
+            with open(output_table_path, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                # Define column headers based on the data structure
+
+                # Parse and write data rows
+                for category in categories:
+                        for entry in data[category]:
+                            writer.writerow([f"Category: {entry}"])
+                            writer.writerow(['Rank', 'Username', 'Score'])
+                            for entry in data[category][entry]:
+                                writer.writerow([
+                                    entry['rank'],
+                                    entry['username'],
+                                    entry['score']
+                                ])
+
+        #output_table_path = self.create_out_table_definition('chess_stats.csv').full_path
+        def get_chess_stats_player(player_name):
+            response = get_player_stats("magsstrats")
+            categories=['chess_blitz', 'chess_bullet', 'chess_rapid']
+            output_table_path='./out/files/chess_stats.csv'
+            #output_table_path = self.create_out_table_definition('chess_stats.csv').full_path
+            data = response.json
+            #write data
+            with open(output_table_path, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                # Define column headers based on the data structure
+                writer.writerow(
+                    ['username', 'category', 'rating'])
+
+                # Parse and write data rows
+                for category in categories:
+                    writer.writerow([
+                        player_name,
+                        category,
+                        data['stats'][category]['last']['rating'],
+                    ])
+
+        from chessdotcom import get_player_stats, Client, get_leaderboards
         Client.request_config["headers"]["User-Agent"] = (
             "My Python Application. "
             "Contact me at mvbupp@gmail.com"
         )
-        response = get_player_stats('magsstrats')
-        
-        player_name = "magsstrats"
-
-        data = response.json
-        categories=['chess_blitz', 'chess_bullet', 'chess_rapid']
         
 
-        #output_table_path = self.create_out_table_definition('chess_stats.csv').full_path
-        output_table_path='chess_stats.csv'
-        # Write data to output table
-        with open(output_table_path, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            # Define column headers based on the data structure
-            writer.writerow(
-                ['username', 'category', 'rating'])
-
-            # Parse and write data rows
-            for category in categories:
-                writer.writerow([
-                    player_name,
-                    category,
-                    data['stats'][category]['last']['rating'],
-                ])
+        
+        get_chess_leaderboards()
+        get_chess_stats_player(PLAYER_NAME)
 
         # Log completion message
         #self.logger.info(f'Data for user {player_name} fetched successfully.')
