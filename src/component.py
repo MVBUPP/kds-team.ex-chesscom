@@ -3,6 +3,7 @@ Template Component main class.
 
 """
 import csv
+import os
 import logging
 from datetime import datetime
 
@@ -10,7 +11,7 @@ from keboola.component.base import ComponentBase
 from keboola.component.exceptions import UserException
 # Load the Component library to process the config file
 from keboola.component import CommonInterface
-
+os.chdir("./data")
 # Rely on the KBC_DATADIR environment variable by default,
 # alternatively provide a data folder path in the constructor (CommonInterface('data'))
 ci = CommonInterface('.')
