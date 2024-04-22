@@ -68,12 +68,12 @@ class Component(ComponentBase):
 
                 # Parse and write data rows
                 for category in categories:
-                        for entry in data[category]:
+                        for entry1 in data[category]:
                             
                             writer.writerow(['Category','Rank', 'Username', 'Score'])
-                            for entry in data[category][entry]:
+                            for entry in data[category][entry1]:
                                 writer.writerow([
-                                    entry,
+                                    entry1,
                                     entry['rank'],
                                     entry['username'],
                                     entry['score']
