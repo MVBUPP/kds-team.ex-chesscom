@@ -14,13 +14,13 @@ from keboola.component import CommonInterface
 #os.chdir("./data")
 # Rely on the KBC_DATADIR environment variable by default,
 # alternatively provide a data folder path in the constructor (CommonInterface('data'))
-ci = CommonInterface('data')
-params = ci.configuration.parameters
+#ci = CommonInterface('data')
+
 
 
 # configuration variables
 KEY_API_TOKEN = '#api_token'
-PLAYER_NAME = params['player_name']
+
 
 # list of mandatory parameters => if some is missing,
 # component will fail with readable message on initialization.
@@ -49,15 +49,16 @@ class Component(ComponentBase):
         # Get user configuration
         # Fetch data from Chess.com API
         # https://api.chess.com/pub/player/magsstrats/stats
-
+        params = self.configuration.parameters
+        PLAYER_NAME = params['player_name']
         def get_chess_leaderboards():
             response=get_leaderboards()
             
 
             data = response.json
             categories=data.keys()
-            #output_table_path='./data/out/files/chess_leaderboards.csv'
-            output_table_path = self.create_out_table_definition('chess_leaderboards.csv').full_path
+            output_table_path='./out/files/chess_leaderboards.csv'
+            #output_table_path = self.create_out_table_definition('chess_leaderboards.csv').full_path
             #write data
             #write data
             with open(output_table_path, mode='w', newline='') as file:
@@ -80,8 +81,8 @@ class Component(ComponentBase):
         def get_chess_stats_player(player_name):
             response = get_player_stats("magsstrats")
             categories=['chess_blitz', 'chess_bullet', 'chess_rapid']
-            #output_table_path='./data/out/files/chess_stats.csv'
-            output_table_path = self.create_out_table_definition('chess_stats.csv').full_path
+            output_table_path='./out/files/chess_stats.csv'
+            #output_table_path = self.create_out_table_definition('chess_stats.csv').full_path
             data = response.json
             #write data
             with open(output_table_path, mode='w', newline='') as file:
