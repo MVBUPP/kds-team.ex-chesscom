@@ -15,7 +15,7 @@
     "debug": {
       "type": "boolean",
       "title": "Debug",
-      "propertyOrder": 2
+      
     }
   }
 }

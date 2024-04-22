@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y build-essential
 RUN pip install flake8
 
 RUN pip install -r /code/requirements.txt
-
+RUN python -m pip install chess.com
 WORKDIR /code/
 
 
