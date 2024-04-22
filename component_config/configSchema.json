@@ -30,7 +30,7 @@
           "rush",
           "battle"
         ],
-        "type": "literal"
+        "type": "string"
       },
       "default": "all",
       "format": "select",
