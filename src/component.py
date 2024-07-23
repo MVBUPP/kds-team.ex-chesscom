@@ -59,12 +59,12 @@ class Component(ComponentBase):
             data = response.json
             
             
-            
+            #comment
             categories=data.keys()
             subcategories=LEADERBOARDS
             if("all" in LEADERBOARDS):
                 subcategories=data.keys()
-
+                
             #output_table_path='./out/tables/chess_leaderboards.csv'
             table = self.create_out_table_definition('chess_leaderboards.csv', incremental= True)
             #output_path=table.full_path
